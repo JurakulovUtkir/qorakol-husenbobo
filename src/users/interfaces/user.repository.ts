@@ -1,3 +1,4 @@
+import { UserQueryDto } from '../dto/query.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserEntity } from '../entities/user.entity';
 
@@ -6,4 +7,5 @@ export interface IUserRepository {
     findOneByPhone(phone: string): Promise<UserEntity | undefined>;
     insert(dto: UserEntity): Promise<UserEntity>;
     update(id: string, dto: UpdateUserDto): Promise<UserEntity>;
+    find(dto: UserQueryDto): Promise<UserEntity[]>;
 }

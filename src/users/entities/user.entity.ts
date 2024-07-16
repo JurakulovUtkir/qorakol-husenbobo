@@ -12,5 +12,17 @@ export class UserEntity {
     description: string;
 
     @Column({ type: 'text', nullable: false })
-    role: string; // can be pupil or teacher
+    type: string; // can be pupil or teacher
+
+    @Column({ type: 'text', nullable: false })
+    photo: string;
+
+    @Column({ type: 'text', nullable: false })
+    subject: string;
+
+    @Column({ nullable: true })
+    students_count: number;
+
+    @Column({ nullable: false })
+    experience: number;
 }

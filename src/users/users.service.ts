@@ -5,10 +5,16 @@ import { UserNotFoundException } from './exception/user.exception';
 import { ResData } from 'src/common/utils/resData';
 import { UsersRepository } from './users.repository';
 import { IUserService } from './interfaces/user.service';
+import { UserQueryDto } from './dto/query.dto';
 
 @Injectable()
 export class UsersService implements IUserService {
     constructor(private readonly repository: UsersRepository) {}
+    async find(dto: UserQueryDto): Promise<ResData<UserEntity[]>> {
+        const foundData = await this.repository.find(dto);
+
+        return new ResData('get all', 200, foundData);
+    }
 
     async findOneById(id: string): Promise<ResData<UserEntity | undefined>> {
         const foundData = await this.repository.findOneById(id);
