@@ -2,20 +2,20 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from '../users/entities/user.entity';
 import { JwtModule, JwtService } from '@nestjs/jwt';
-import { UsersRepository } from 'src/users/users.repository';
-import { UsersService } from 'src/users/users.service';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt-auth-guard';
+import { JwtStrategy } from './strategy/jwt.strategy';
 
 import * as dotenv from 'dotenv';
-import { JwtStrategy } from './strategy/jwt.strategy';
+import { Company } from 'src/companies/entities/company.entity';
+import { CompanyService } from 'src/companies/companies.service';
+import { CompanyRepository } from 'src/companies/repositories/companies.repository';
 dotenv.config();
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([UserEntity]),
+        TypeOrmModule.forFeature([Company]),
         JwtModule.register({
             secret: process.env.JWT_SECRET,
             signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
@@ -24,8 +24,8 @@ dotenv.config();
     controllers: [AuthController],
     providers: [
         AuthService,
-        UsersRepository,
-        UsersService,
+        CompanyRepository,
+        CompanyService,
         JwtService,
         JwtStrategy,
         {

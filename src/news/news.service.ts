@@ -11,20 +11,13 @@ import axios from 'axios';
 import { News } from './entities/news.entity';
 import { Repository } from 'typeorm';
 import { isUUID } from 'class-validator';
+import { ResData } from 'src/common/utils/resData';
 
 @Injectable()
 export class NewsService {
     constructor(
         @InjectRepository(News) private readonly repository: Repository<News>,
     ) {}
-    async create(id: string) {
-        try {
-            const nextPage = await this.get_data_from_news_api(id);
-            return nextPage;
-        } catch (error) {
-            throw new NotAcceptableException(error);
-        }
-    }
 
     async add_news(dto: CreateNewsDto) {
         try {
@@ -36,9 +29,11 @@ export class NewsService {
     }
 
     findAll() {
-        return this.repository.find({
+        const data = this.repository.find({
             order: { pubDate: `DESC` },
         });
+
+        return new ResData('All news by descending order', 200, data);
     }
 
     async findOne(id: string) {
@@ -47,7 +42,7 @@ export class NewsService {
                 const article = await this.repository.findOneBy({ id: id });
 
                 if (article) {
-                    return article;
+                    return new ResData('Article', 200, article);
                 } else {
                     return new NotFoundException('No article with id ' + id);
                 }
@@ -64,7 +59,8 @@ export class NewsService {
             const article = await this.findOne(id);
             if (article) {
                 await this.repository.update(id, updateNewsDto);
-                return await this.findOne(id);
+                const updated_article = await this.findOne(id);
+                return new ResData('Article', 200, updated_article);
             } else {
                 return new NotFoundException('No article with id' + id);
             }
@@ -84,49 +80,6 @@ export class NewsService {
             }
         } catch (error) {
             return new NotAcceptableException(error.message);
-        }
-    }
-
-    async get_data_from_news_api(page: string): Promise<any> {
-        const url = 'https://newsdata.io/api/1/news';
-
-        try {
-            let response = null;
-            const utkir_api_key = 'pub_42532b35a75d14ac9a0ebd646020759647b11';
-            const category = 'top';
-
-            response = await axios.get(url, {
-                params: {
-                    apikey: utkir_api_key,
-                    country: 'uz',
-                    language: 'uz',
-                    image: 1,
-                    domainurl: 'kun.uz',
-                    page: page,
-                    category: category,
-                },
-            });
-
-            // we need to filter drugs from prohibited drugs before returning
-            const results: Article[] = await response.data.results;
-
-            console.log(response.data);
-
-            const nextPage = response.data.nextPage;
-
-            for (const article of results) {
-                await this.repository.save({
-                    title: article.title,
-                    description: article.description,
-                    pubDate: article.pubDate,
-                    category: category,
-                    image_url: article.image_url,
-                });
-            }
-
-            return nextPage;
-        } catch (error) {
-            console.log(error.detail);
         }
     }
 }

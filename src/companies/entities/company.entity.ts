@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('users')
-export class UserEntity {
+@Entity('company')
+export class Company {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -9,8 +9,8 @@ export class UserEntity {
     phone: string;
 
     @Column({ type: 'text', nullable: false })
-    description: string;
+    password: string;
 
     @Column({ type: 'text', nullable: false })
-    role: string; // can be pupil or teacher
+    role: string;
 }

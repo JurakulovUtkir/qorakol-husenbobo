@@ -1,11 +1,11 @@
-import { UserEntity } from 'src/users/entities/user.entity';
+import { Company } from 'src/companies/entities/company.entity';
 
 export interface ILoginData {
-    user: UserEntity;
+    user: Company;
     token: string;
 }
 
 export interface IRegisterData {
-    user: UserEntity;
+    user: Company;
     token: string;
 }
