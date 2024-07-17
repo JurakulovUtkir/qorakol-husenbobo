@@ -28,9 +28,9 @@ export class NewsService {
         }
     }
 
-    findAll() {
-        const data = this.repository.find({
-            order: { pubDate: `DESC` },
+    async findAll() {
+        const data = await this.repository.find({
+            order: { created_at: `DESC` },
         });
 
         return new ResData('All news by descending order', 200, data);
