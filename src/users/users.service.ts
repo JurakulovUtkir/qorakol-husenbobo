@@ -40,12 +40,16 @@ export class UsersService implements IUserService {
     }
 
     async create(dto: CreateUserDto): Promise<ResData<UserEntity>> {
-        const newUser = new UserEntity();
+        try {
+            const newUser = new UserEntity();
 
-        const newData = Object.assign(newUser, dto);
+            const newData = Object.assign(newUser, dto);
 
-        const newUserEntity = await this.repository.insert(newData);
+            const newUserEntity = await this.repository.insert(newData);
 
-        return new ResData('success', 200, newUserEntity);
+            return new ResData('success', 200, newUserEntity);
+        } catch (error) {
+            return new ResData('error', 500, error.message);
+        }
     }
 }

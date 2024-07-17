@@ -3,6 +3,7 @@ import {
     Controller,
     Get,
     Post,
+    Query,
     // Get,
     // Post,
     // Body,
@@ -31,7 +32,7 @@ export class UsersController {
 
     @Public()
     @Get()
-    findAll(@Body() dto: UserQueryDto) {
+    findAll(@Query() dto: UserQueryDto) {
         return this.usersService.find(dto);
     }
 
