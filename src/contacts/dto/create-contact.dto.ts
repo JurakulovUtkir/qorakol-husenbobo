@@ -9,7 +9,7 @@ export class CreateContactDto {
     @IsNotEmpty()
     phone: string;
 
-    @IsNumber()
+    @IsString()
     @IsOptional()
     info?: string;
 }
