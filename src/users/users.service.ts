@@ -6,10 +6,24 @@ import { ResData } from 'src/common/utils/resData';
 import { UsersRepository } from './users.repository';
 import { IUserService } from './interfaces/user.service';
 import { UserQueryDto } from './dto/query.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService implements IUserService {
     constructor(private readonly repository: UsersRepository) {}
+    async update(id: string, dto: UpdateUserDto): Promise<ResData<UserEntity>> {
+        await this.repository.update(id, dto);
+        return this.findOneById(id);
+    }
+    async delete(id: string): Promise<ResData<UserEntity>> {
+        const foundData = await this.repository.findOneById(id);
+
+        if (!foundData) {
+            throw new UserNotFoundException();
+        }
+        await this.repository.remove(id);
+        return new ResData('deleted user', 200, foundData);
+    }
     async find(dto: UserQueryDto): Promise<ResData<UserEntity[]>> {
         const foundData = await this.repository.find(dto);
 

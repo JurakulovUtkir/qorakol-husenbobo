@@ -10,6 +10,15 @@ export class UsersRepository implements IUserRepository {
         @InjectRepository(UserEntity)
         private repository: Repository<UserEntity>,
     ) {}
+    async remove(id: string): Promise<UserEntity | undefined> {
+        const user = await this.findOneById(id);
+        if (!user) {
+            return undefined;
+        } else {
+            await this.repository.delete(id);
+            return user;
+        }
+    }
     async find(dto: UserQueryDto): Promise<UserEntity[]> {
         if (dto.user_type) {
             return await this.repository.find({
