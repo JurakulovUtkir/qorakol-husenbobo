@@ -34,6 +34,11 @@ export class UsersController {
         return this.usersService.create(createUserDto);
     }
 
+    @Get(':id')
+    async findOne(@Param('id') id: string) {
+        return this.usersService.findOneById(id);
+    }
+
     @Public()
     @Get()
     findAll(@Query() dto: UserQueryDto) {
